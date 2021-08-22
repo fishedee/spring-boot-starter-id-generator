@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.fishedee.id_generator.autoconfig.IdGeneratorAutoConfiguration
