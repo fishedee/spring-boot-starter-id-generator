@@ -1,2 +1,7 @@
 # id_generator
-Id Generator For Java
+
+Java的ID生成器  
+
+## 安装
+
+
