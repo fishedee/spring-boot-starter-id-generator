@@ -53,7 +53,9 @@ insert into id_generator_config(`key`,template,step,initial_value) values
 初始化数据库
 
 ```ini
-spring.id-generator.enable=true
+spring.id-generator.enable = true
+#默认表名为id_generator_config，可自定义
+#spring.id-generator.table = my_generator_config
 ```
 
 初始化

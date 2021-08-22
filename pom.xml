@@ -4,8 +4,8 @@
 
   <groupId>com.fishedee.id_generator</groupId>
   <artifactId>parent</artifactId>
-  <version>1.0</version>
   <packaging>pom</packaging>
+  <version>1.0</version>
 
   <name>parent</name>
   <url>http://maven.apache.org</url>

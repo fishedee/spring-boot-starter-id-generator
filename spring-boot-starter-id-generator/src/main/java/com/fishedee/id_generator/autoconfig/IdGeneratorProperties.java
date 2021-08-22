@@ -7,4 +7,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix="spring.id-generator")
 public class IdGeneratorProperties {
     private boolean enable;
+
+    private String table = "id_generator_config";
 }
