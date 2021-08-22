@@ -3,83 +3,15 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.fishedee.id_generator</groupId>
-  <artifactId>id_generator</artifactId>
-  <version>1.0-SNAPSHOT</version>
-  <packaging>jar</packaging>
+  <artifactId>parent</artifactId>
+  <version>1.0</version>
+  <packaging>pom</packaging>
 
-  <name>id_generator</name>
+  <name>parent</name>
   <url>http://maven.apache.org</url>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <java.version>1.8</java.version>
-    <version.compiler-plugin>3.5.1</version.compiler-plugin>
-  </properties>
-
-
-
-  <dependencyManagement>
-    <dependencies>
-      <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies -->
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-dependencies</artifactId>
-        <version>2.5.0</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
-
-  <dependencies>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-configuration-processor</artifactId>
-      <optional>true</optional>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-autoconfigure</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-jdbc</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-json</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <version>1.18.20</version>
-      <scope>provided</scope>
-    </dependency>
-
-  </dependencies>
-
-  <build>
-  <plugins>
-  <plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-compiler-plugin</artifactId>
-    <version>${version.compiler-plugin}</version>
-    <configuration>
-      <source>${java.version}</source>
-      <target>${java.version}</target>
-      <compilerVersion>${java.version}</compilerVersion>
-    </configuration>
-  </plugin></plugins></build>
+  <modules>
+    <module>spring-boot-starter-id-generator</module>
+    <module>spring-boot-starter-id-generator-sample</module>
+  </modules>
 </project>

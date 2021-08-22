@@ -1,4 +1,4 @@
-package com.fishedee.id_generator.config;
+package com.fishedee.id_generator.autoconfig;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

@@ -18,7 +18,6 @@ public class PersistCounterGenerator {
         //这一句有隐式的同key下的for update锁
         PersistConfig config = persistConfigRepository.get(key);
 
-        System.out.println("go "+currentTime);
         //用新值来赋予counter
         PersistCounter counter = new PersistCounter(currentTime,config);
 

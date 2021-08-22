@@ -1,4 +1,4 @@
-package com.fishedee.id_generator.config;
+package com.fishedee.id_generator.autoconfig;
 
 import com.fishedee.id_generator.*;
 import lombok.extern.slf4j.Slf4j;

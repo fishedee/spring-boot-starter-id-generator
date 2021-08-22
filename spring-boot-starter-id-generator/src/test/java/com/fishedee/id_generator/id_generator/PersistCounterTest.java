@@ -13,6 +13,7 @@ import java.util.Date;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Import(MyConfig.class)
 @DirtiesContext(classMode= DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class PersistCounterTest {
 
