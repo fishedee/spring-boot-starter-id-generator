@@ -42,6 +42,11 @@ public abstract class AbstractGenerator implements IdGenerator{
     }
 
     @Override
+    public String getKey(Object instance){
+        return getClassKey(instance.getClass());
+    }
+    
+    @Override
     public Long nextLong(Object instance){
         String id = this.next(instance);
         try{
