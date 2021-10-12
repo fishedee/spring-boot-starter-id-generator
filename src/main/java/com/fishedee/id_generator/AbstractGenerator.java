@@ -59,8 +59,18 @@ public abstract class AbstractGenerator implements IdGenerator{
     }
 
     @Override
+    public String getKey(Class clazz){
+        return getClassInfo(clazz).key;
+    }
+
+    @Override
     public String getName(Object instance){
         return getClassInfo(instance.getClass()).name;
+    }
+
+    @Override
+    public String getName(Class clazz){
+        return getClassInfo(clazz).name;
     }
     
     @Override

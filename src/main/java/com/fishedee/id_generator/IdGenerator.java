@@ -3,7 +3,11 @@ package com.fishedee.id_generator;
 public interface IdGenerator {
     String getKey(Object instance);
 
+    String getKey(Class clazz);
+
     String getName(Object instance);
+
+    String getName(Class clazz);
 
     String next(Object instance);
 
