@@ -6,7 +6,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class AbstractGenerator implements IdGenerator{
-    private Map<Class,String> classToKey;
+    public static class ClassInfo{
+        String key;
+
+        String name;
+    }
+    private Map<Class,ClassInfo> classToKey;
 
     private Map<String,Class> keyMap;
 
@@ -15,7 +20,7 @@ public abstract class AbstractGenerator implements IdGenerator{
         keyMap = new HashMap<>();
     }
 
-    private String extractClassKey(Class clazz){
+    private ClassInfo extractClassKey(Class clazz){
         IdGeneratorKey idGeneratorKey = (IdGeneratorKey)clazz.getAnnotation(IdGeneratorKey.class);
         if( idGeneratorKey == null ){
             throw new RuntimeException(clazz.getName()+"缺少@IdGeneratorKey注解");
@@ -28,22 +33,34 @@ public abstract class AbstractGenerator implements IdGenerator{
             throw new RuntimeException(clazz.getName()+"与"+keyMap.get(keyStr)+"的ID值相同!");
         }
         keyMap.put(keyStr,clazz);
-        return keyStr;
+
+        String nameStr = idGeneratorKey.name().trim();
+
+        ClassInfo classInfo = new ClassInfo();
+        classInfo.key = keyStr;
+        classInfo.name = nameStr;
+        return classInfo;
     }
 
-    private String getClassKey(Class clazz){
-        String key = classToKey.get(clazz);
-        if( key != null ){
-            return key;
+    private ClassInfo getClassInfo(Class clazz){
+        ClassInfo classInfo = classToKey.get(clazz);
+        if( classInfo != null ){
+            return classInfo;
         }
-        key = extractClassKey(clazz);
-        classToKey.put(clazz,key);
-        return key;
+        classInfo = extractClassKey(clazz);
+        classToKey.put(clazz,classInfo);
+        return classInfo;
     }
+
 
     @Override
     public String getKey(Object instance){
-        return getClassKey(instance.getClass());
+        return getClassInfo(instance.getClass()).key;
+    }
+
+    @Override
+    public String getName(Object instance){
+        return getClassInfo(instance.getClass()).name;
     }
     
     @Override
@@ -59,7 +76,7 @@ public abstract class AbstractGenerator implements IdGenerator{
 
     @Override
     public String next(Object instance){
-        String key = getClassKey(instance.getClass());
+        String key = getClassInfo(instance.getClass()).key;
         return this.next(key);
     }
 

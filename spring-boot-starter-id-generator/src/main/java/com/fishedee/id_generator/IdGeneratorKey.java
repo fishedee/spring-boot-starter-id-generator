@@ -8,4 +8,6 @@ import java.lang.annotation.*;
 @Inherited
 public @interface IdGeneratorKey {
     String value();
+
+    String name() default "";
 }

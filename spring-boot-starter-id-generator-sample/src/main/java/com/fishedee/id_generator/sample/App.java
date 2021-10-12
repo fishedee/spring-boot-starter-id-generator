@@ -31,13 +31,15 @@ public class App
             log.info("{} {}",userKey,idGenerator.next(userKey));
             log.info("{} {}",userKey,idGenerator.next(new User()));
         }
-        log.info("{}",idGenerator.getKey(new User()));
+        log.info("{} {}",idGenerator.getKey(new User()),idGenerator.getName(new User()));
 
         String orderKey = "order.sales_order";
         for( int i = 0 ;i != 10 ;i++){
             log.info("{} {}",orderKey,idGenerator.next(orderKey));
             log.info("{} {}",orderKey,idGenerator.next(new SalesOrder()));
         }
-        log.info("{}",idGenerator.getKey(new SalesOrder()));
+        log.info("{} {}",idGenerator.getKey(new SalesOrder()),idGenerator.getName(new SalesOrder()));
+
+
     }
 }

@@ -4,7 +4,7 @@
 
   <groupId>com.fishedee.id_generator</groupId>
   <artifactId>spring-boot-starter-id-generator</artifactId>
-  <version>1.5</version>
+  <version>1.6</version>
   <packaging>jar</packaging>
 
   <name>spring-boot-starter-id-generator</name>
