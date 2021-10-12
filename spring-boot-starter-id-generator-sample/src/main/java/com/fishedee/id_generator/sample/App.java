@@ -31,6 +31,7 @@ public class App
             log.info("{} {}",userKey,idGenerator.next(userKey));
             log.info("{} {}",userKey,idGenerator.next(new User()));
         }
+        log.info("{} {}",idGenerator.getKey(User.class),idGenerator.getName(User.class));
         log.info("{} {}",idGenerator.getKey(new User()),idGenerator.getName(new User()));
 
         String orderKey = "order.sales_order";
@@ -38,8 +39,7 @@ public class App
             log.info("{} {}",orderKey,idGenerator.next(orderKey));
             log.info("{} {}",orderKey,idGenerator.next(new SalesOrder()));
         }
+        log.info("{} {}",idGenerator.getKey(SalesOrder.class),idGenerator.getName(SalesOrder.class));
         log.info("{} {}",idGenerator.getKey(new SalesOrder()),idGenerator.getName(new SalesOrder()));
-
-
     }
 }
