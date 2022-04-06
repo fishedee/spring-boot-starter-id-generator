@@ -20,7 +20,6 @@ public class PersistConfigRepositoryJdbc implements PersistConfigRepository {
     private String selectAllSql;
 
     public PersistConfigRepositoryJdbc(String tableName){
-        this.selectAllSql = String.format("select `key`,template,step,initial_value,is_sync from `%s`",tableName);
         this.selectSql = String.format("select `key`,template,step,initial_value,is_sync from `%s` where `key` = ? for update ",tableName);
         this.updateSql = String.format("update `%s` set initial_value = ? where `key` = ?",tableName);
     }
