@@ -51,8 +51,23 @@ public class App implements ApplicationRunner
         }
     }
 
+
+    @Transactional
+    public void testUpdateSyncAndAsyncInner(String key,String key2){
+        idGenerator.next(key);
+        idGenerator.next(key2);
+    }
+
+    public void testUpdateSyncAndAsync(){
+        String orderKey2 = "order.purchase_order";
+        String orderKey = "order.sales_order";
+        App app = (App)AopContext.currentProxy();
+        app.testUpdateSyncAndAsyncInner(orderKey2,orderKey);
+    }
+
     @Override
     public void run(ApplicationArguments args) throws Exception{
+        testUpdateSyncAndAsync();
         String userKey = "user.user";
         for( int i = 0 ;i != 10 ;i++){
             log.info("{} {}",userKey,idGenerator.next(userKey));

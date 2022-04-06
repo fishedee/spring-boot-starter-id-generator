@@ -15,6 +15,10 @@ public class PersistConfigRepositoryStub implements PersistConfigRepository {
         return mapConfig.get(key);
     }
 
+    public PersistConfig getForUpdate(String key) {
+        return mapConfig.get(key);
+    }
+
     public void set(String key,PersistConfig config) {
         PersistConfig oldConfig = mapConfig.get(key);
         if( oldConfig == null ){
@@ -26,9 +30,5 @@ public class PersistConfigRepositoryStub implements PersistConfigRepository {
 
     public void clear(){
         mapConfig.clear();
-    }
-
-    public List<PersistConfig> getAll(){
-        return new ArrayList<>(mapConfig.values());
     }
 }
