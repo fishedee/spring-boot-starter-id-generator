@@ -30,6 +30,6 @@ public class MyConfig {
 
     @Bean
     @Primary
-    public PersistGenerator persistGenerator(PersistCounterGenerator counterGenerator){return new PersistGenerator(counterGenerator);}
+    public PersistGenerator persistGenerator(PersistCounterGenerator counterGenerator,PersistConfigRepository configRepository){return new PersistGenerator(counterGenerator,configRepository);}
 
 }

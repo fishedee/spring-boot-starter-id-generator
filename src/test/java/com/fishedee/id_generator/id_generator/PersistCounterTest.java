@@ -27,9 +27,9 @@ public class PersistCounterTest {
     public void testIncrementOne(){
         currentTimeStub.setNow(2000,1,1);
         //只步进1个
-        PersistCounter counter = new PersistCounter(currentTimeStub,new PersistConfig("{id}",1,"10"));
+        PersistCounter counter = new PersistCounter(currentTimeStub,new PersistConfig("testKey","{id}",1,"10",(byte)0));
         JsonAssertUtil.checkEqualStrict(
-                "{template:\"{id}\",step:1,initialValue:\"11\"}",
+                "{template:\"{id}\",step:1,initialValue:\"11\",isSync:null,key:null}",
                 counter.getNextConfig()
         );
 
@@ -43,9 +43,9 @@ public class PersistCounterTest {
     public void testIncrementTwo(){
         currentTimeStub.setNow(2000,1,1);
         //只步进2个
-        PersistCounter counter = new PersistCounter(currentTimeStub,new PersistConfig("{id}",2,"101"));
+        PersistCounter counter = new PersistCounter(currentTimeStub,new PersistConfig("testKey","{id}",2,"101",(byte)0));
         JsonAssertUtil.checkEqualStrict(
-                "{template:\"{id}\",step:2,initialValue:\"103\"}",
+                "{template:\"{id}\",step:2,initialValue:\"103\",isSync:null,key:null}",
                 counter.getNextConfig()
         );
 
@@ -64,7 +64,7 @@ public class PersistCounterTest {
         currentTimeStub.setNow(2000,1,1);
         //只步进0个
         IdGeneratorException e = assertThrows(IdGeneratorException.class,()->{
-            PersistCounter counter = new PersistCounter(currentTimeStub,new PersistConfig("{id}",0,"101"));
+            PersistCounter counter = new PersistCounter(currentTimeStub,new PersistConfig("testKey","{id}",0,"101",(byte)0));
         });
         assertTrue(e.getMessage().contains("步长不能为负数或者0"));
     }
@@ -74,7 +74,7 @@ public class PersistCounterTest {
         currentTimeStub.setNow(2000,1,1);
         //只步进0个
         IdGeneratorException e = assertThrows(IdGeneratorException.class,()->{
-            PersistCounter counter = new PersistCounter(currentTimeStub,new PersistConfig("{id}",-2,"101"));
+            PersistCounter counter = new PersistCounter(currentTimeStub,new PersistConfig("testKey","{id}",-2,"101",(byte)0));
         });
         assertTrue(e.getMessage().contains("步长不能为负数或者0"));
     }
@@ -82,9 +82,9 @@ public class PersistCounterTest {
     @Test
     public void testIncrementOneWithTime(){
         currentTimeStub.setNow(2000,1,1);
-        PersistCounter counter = new PersistCounter(currentTimeStub,new PersistConfig("XS{year}{month}{day}{id}",1,"XS2000010110"));
+        PersistCounter counter = new PersistCounter(currentTimeStub,new PersistConfig("testKey","XS{year}{month}{day}{id}",1,"XS2000010110",(byte)0));
         JsonAssertUtil.checkEqualStrict(
-                "{template:\"XS{year}{month}{day}{id}\",step:1,initialValue:\"XS2000010111\"}",
+                "{template:\"XS{year}{month}{day}{id}\",step:1,initialValue:\"XS2000010111\",isSync:null,key:null}",
                 counter.getNextConfig()
         );
 
@@ -98,9 +98,9 @@ public class PersistCounterTest {
     @Test
     public void testIncrementTenWithTime(){
         currentTimeStub.setNow(2000,1,1);
-        PersistCounter counter = new PersistCounter(currentTimeStub,new PersistConfig("XS{year}{month}{day}{id}",10,"XS2000010110"));
+        PersistCounter counter = new PersistCounter(currentTimeStub,new PersistConfig("testKey","XS{year}{month}{day}{id}",10,"XS2000010110",(byte)0));
         JsonAssertUtil.checkEqualStrict(
-                "{template:\"XS{year}{month}{day}{id}\",step:10,initialValue:\"XS2000010120\"}",
+                "{template:\"XS{year}{month}{day}{id}\",step:10,initialValue:\"XS2000010120\",isSync:null,key:null}",
                 counter.getNextConfig()
         );
 
@@ -116,9 +116,9 @@ public class PersistCounterTest {
     @Test
     public void testTimeExpire(){
         currentTimeStub.setNow(2000,1,2);
-        PersistCounter counter = new PersistCounter(currentTimeStub,new PersistConfig("XS{year}{month}{day}{id:4}",10,"XS200001010010"));
+        PersistCounter counter = new PersistCounter(currentTimeStub,new PersistConfig("testKey","XS{year}{month}{day}{id:4}",10,"XS200001010010",(byte)0));
         JsonAssertUtil.checkEqualStrict(
-                "{template:\"XS{year}{month}{day}{id:4}\",step:10,initialValue:\"XS200001020011\"}",
+                "{template:\"XS{year}{month}{day}{id:4}\",step:10,initialValue:\"XS200001020011\",isSync:null,key:null}",
                 counter.getNextConfig()
         );
 
@@ -136,9 +136,9 @@ public class PersistCounterTest {
     @Test
     public void testTimeHasNextExpire(){
         currentTimeStub.setNow(1999,1,2);
-        PersistCounter counter = new PersistCounter(currentTimeStub,new PersistConfig("XS{year}{month}{day}{id:4}",9,"XS199901020010"));
+        PersistCounter counter = new PersistCounter(currentTimeStub,new PersistConfig("testKey","XS{year}{month}{day}{id:4}",9,"XS199901020010",(byte)0));
         JsonAssertUtil.checkEqualStrict(
-                "{template:\"XS{year}{month}{day}{id:4}\",step:9,initialValue:\"XS199901020019\"}",
+                "{template:\"XS{year}{month}{day}{id:4}\",step:9,initialValue:\"XS199901020019\",isSync:null,key:null}",
                 counter.getNextConfig()
         );
 
@@ -152,9 +152,9 @@ public class PersistCounterTest {
         currentTimeStub.setNow(1999,1,3);
         assertFalse(counter.hasNext());
 
-        PersistCounter counter2 = new PersistCounter(currentTimeStub,new PersistConfig("XS{year}{month}{day}{id:4}",9,"XS199901020019"));
+        PersistCounter counter2 = new PersistCounter(currentTimeStub,new PersistConfig("testKey","XS{year}{month}{day}{id:4}",9,"XS199901020019",(byte)0));
         JsonAssertUtil.checkEqualStrict(
-                "{template:\"XS{year}{month}{day}{id:4}\",step:9,initialValue:\"XS199901030010\"}",
+                "{template:\"XS{year}{month}{day}{id:4}\",step:9,initialValue:\"XS199901030010\",isSync:null,key:null}",
                 counter2.getNextConfig()
         );
     }
@@ -162,9 +162,9 @@ public class PersistCounterTest {
     @Test
     public void testTimeOnlyYearExpire() {
         currentTimeStub.setNow(1999,1,2);
-        PersistCounter counter = new PersistCounter(currentTimeStub,new PersistConfig("XS{year}{id:4}",9,"XS19980011"));
+        PersistCounter counter = new PersistCounter(currentTimeStub,new PersistConfig("testKey","XS{year}{id:4}",9,"XS19980011",(byte)0));
         JsonAssertUtil.checkEqualStrict(
-                "{template:\"XS{year}{id:4}\",step:9,initialValue:\"XS19990010\"}",
+                "{template:\"XS{year}{id:4}\",step:9,initialValue:\"XS19990010\",isSync:null,key:null}",
                 counter.getNextConfig()
         );
     }
@@ -172,9 +172,9 @@ public class PersistCounterTest {
     @Test
     public void testTimeOnlyYearAndMonthExpire() {
         currentTimeStub.setNow(1999,2,2);
-        PersistCounter counter = new PersistCounter(currentTimeStub,new PersistConfig("XS{year}{month}{id:4}",9,"XS1999010011"));
+        PersistCounter counter = new PersistCounter(currentTimeStub,new PersistConfig("testKey","XS{year}{month}{id:4}",9,"XS1999010011",(byte)0));
         JsonAssertUtil.checkEqualStrict(
-                "{template:\"XS{year}{month}{id:4}\",step:9,initialValue:\"XS1999020010\"}",
+                "{template:\"XS{year}{month}{id:4}\",step:9,initialValue:\"XS1999020010\",isSync:null,key:null}",
                 counter.getNextConfig()
         );
     }
@@ -182,9 +182,9 @@ public class PersistCounterTest {
     @Test
     public void testNotValid(){
         currentTimeStub.setNow(1999,2,2);
-        PersistCounter counter = new PersistCounter(currentTimeStub,new PersistConfig("XS{year}{month}{day}{id:4}",9,"XS1999"));
+        PersistCounter counter = new PersistCounter(currentTimeStub,new PersistConfig("testKey","XS{year}{month}{day}{id:4}",9,"XS1999",(byte)0));
         JsonAssertUtil.checkEqualStrict(
-                "{template:\"XS{year}{month}{day}{id:4}\",step:9,initialValue:\"XS199902020010\"}",
+                "{template:\"XS{year}{month}{day}{id:4}\",step:9,initialValue:\"XS199902020010\",isSync:null,key:null}",
                 counter.getNextConfig()
         );
 
@@ -199,7 +199,7 @@ public class PersistCounterTest {
     public void testLackOfId(){
         currentTimeStub.setNow(1999,2,2);
         IdGeneratorException e = assertThrows(IdGeneratorException.class,()->{
-            PersistCounter counter = new PersistCounter(currentTimeStub,new PersistConfig("XS{year}{month}{day}",9,"XS19990202"));
+            PersistCounter counter = new PersistCounter(currentTimeStub,new PersistConfig("testKey","XS{year}{month}{day}",9,"XS19990202",(byte)0));
         });
         assertTrue(e.getMessage().contains("缺乏id参数"));
     }
@@ -208,7 +208,7 @@ public class PersistCounterTest {
     public void testStepNagative(){
         currentTimeStub.setNow(1999,2,2);
         IdGeneratorException e = assertThrows(IdGeneratorException.class,()->{
-            PersistCounter counter = new PersistCounter(currentTimeStub,new PersistConfig("XS{year}{month}{day}{id}",0,"XS199902021"));
+            PersistCounter counter = new PersistCounter(currentTimeStub,new PersistConfig("testKey","XS{year}{month}{day}{id}",0,"XS199902021",(byte)0));
         });
         assertTrue(e.getMessage().contains("步长不能为负数或者0"));
     }

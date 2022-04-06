@@ -3,7 +3,9 @@ package com.fishedee.id_generator.id_generator;
 import com.fishedee.id_generator.PersistConfig;
 import com.fishedee.id_generator.PersistConfigRepository;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class PersistConfigRepositoryStub implements PersistConfigRepository {
@@ -14,10 +16,19 @@ public class PersistConfigRepositoryStub implements PersistConfigRepository {
     }
 
     public void set(String key,PersistConfig config) {
-        mapConfig.put(key,config);
+        PersistConfig oldConfig = mapConfig.get(key);
+        if( oldConfig == null ){
+            mapConfig.put(key,config);
+        }else{
+            oldConfig.setInitialValue(config.getInitialValue());
+        }
     }
 
     public void clear(){
         mapConfig.clear();
+    }
+
+    public List<PersistConfig> getAll(){
+        return new ArrayList<>(mapConfig.values());
     }
 }
