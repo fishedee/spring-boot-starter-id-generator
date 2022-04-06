@@ -21,7 +21,7 @@ public class PersistCounterGenerator {
 
     public PersistCounter getCounterSync(String key){
         if(TransactionSynchronizationManager.isActualTransactionActive() == false ){
-            throw new RuntimeException("没有开启事务的情况不能使用TransactionSynchronizationManager");
+            throw new RuntimeException("没有开启事务的情况不能使用idGenerator的getCounterSync同步功能");
         }
         return this.getCounterInner(key);
     }
