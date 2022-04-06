@@ -20,7 +20,7 @@ public class PersistConfigRepositoryJdbc implements PersistConfigRepository {
     private String selectAllSql;
 
     public PersistConfigRepositoryJdbc(String tableName){
-        this.selectSql = String.format("select `key`,template,step,initial_value,is_sync from `%s` where `key` = ? for update ",tableName);
+        this.selectSql = String.format("select `key`,template,step,initial_value,is_sync from `%s` where `key` = ?",tableName);
         this.updateSql = String.format("update `%s` set initial_value = ? where `key` = ?",tableName);
     }
 
@@ -35,8 +35,19 @@ public class PersistConfigRepositoryJdbc implements PersistConfigRepository {
     }
 
     public PersistConfig get(String key){
-        //for update锁
         List<Map<String,Object>> mapList = jdbcTemplate.queryForList(this.selectSql,key);
+
+        if( mapList.size() == 0 ){
+            throw new RuntimeException("没有"+key+"的主键生成器");
+        }
+        return this.convertToConfig(mapList.get(0));
+    }
+
+
+    public PersistConfig getForUpdate(String key){
+
+        //for update锁
+        List<Map<String,Object>> mapList = jdbcTemplate.queryForList(this.selectSql+" for update",key);
 
         if( mapList.size() == 0 ){
             throw new RuntimeException("没有"+key+"的主键生成器");

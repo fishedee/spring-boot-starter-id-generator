@@ -1,11 +1,13 @@
 package com.fishedee.id_generator;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
+@Slf4j
 public class PersistCounterGenerator {
     @Autowired
     private PersistConfigRepository persistConfigRepository;
@@ -29,7 +31,7 @@ public class PersistCounterGenerator {
 
     private PersistCounter getCounterInner(String key){
         //这一句有隐式的同key下的for update锁
-        PersistConfig config = persistConfigRepository.get(key);
+        PersistConfig config = persistConfigRepository.getForUpdate(key);
 
         //用新值来赋予counter
         PersistCounter counter = new PersistCounter(currentTime,config);

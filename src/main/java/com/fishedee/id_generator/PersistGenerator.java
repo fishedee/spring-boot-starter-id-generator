@@ -49,7 +49,6 @@ public class PersistGenerator extends AbstractGenerator{
         //获取counter
         PersistCounter counter;
         if( isSync == true){
-            counterMap.remove(key);
             counter = persistCounterGenerator.getCounterSync(key);
         }else{
             counter = counterMap.get(key);
@@ -60,8 +59,8 @@ public class PersistGenerator extends AbstractGenerator{
             }
         }
 
-        //更新sync配置
-        syncCounterConfig.put(key,counter.getIsSync());
+        //禁止更新sync配置，这样可能会导致死锁，同一个key在一个事务中，既执行sync，也执行async就会死锁
+        //syncCounterConfig.put(key,counter.getIsSync());
 
         //获取counter的下一个值
         return counter.next();
