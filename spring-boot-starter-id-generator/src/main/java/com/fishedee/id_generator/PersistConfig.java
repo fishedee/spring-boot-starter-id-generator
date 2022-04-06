@@ -8,9 +8,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PersistConfig {
+    private String key;
+
     private String template;
 
     private int step;
 
     private String initialValue;
+
+    private Byte isSync;
 }

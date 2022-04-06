@@ -46,8 +46,8 @@ public class IdGeneratorAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(IdGenerator.class)
     @ConditionalOnProperty(value = "spring.id-generator.enable", havingValue = "true")
-    public IdGenerator idGenerator(PersistCounterGenerator counterGenerator){
-        return new PersistGenerator(counterGenerator);
+    public IdGenerator idGenerator(PersistCounterGenerator counterGenerator,PersistConfigRepository persistConfigRepository){
+        return new PersistGenerator(counterGenerator,persistConfigRepository);
     }
 
 }

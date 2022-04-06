@@ -4,9 +4,11 @@ create table my_generator_config(
     template char(64) not null,
     step integer not null,
     initial_value char(64) not null,
+    is_sync tinyint not null,
     primary key(`key`)
 )engine=innodb default charset=utf8mb4;
 
-insert into my_generator_config(`key`,template,step,initial_value) values
- ('user.user','{id}',10,1000),
- ('order.sales_order','XSDD{year}{month}{day}{id:8}',10,'0');                                                                    ;
+insert into my_generator_config(`key`,template,step,initial_value,is_sync) values
+ ('user.user','{id}',10,1000,0),
+ ('order.sales_order','XSDD{year}{month}{day}{id:8}',10,'0',0),
+ ('order.purchase_order','CGDD{year}{month}{day}{id:8}',1,'0',1);                                                                    ;

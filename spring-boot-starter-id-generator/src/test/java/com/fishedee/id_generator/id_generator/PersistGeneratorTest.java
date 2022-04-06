@@ -35,7 +35,7 @@ public class PersistGeneratorTest {
     @Test
     public void testIdOnly(){
         currentTimeStub.setNow(2020,1,1);
-        persistConfigRepositoryStub.set("class1",new PersistConfig("{id}",10,"1"));
+        persistConfigRepositoryStub.set("class1",new PersistConfig("class1","{id}",10,"1",(byte)0));
 
         for( int i = 1 ;i != 100;i++){
             String next = persistGenerator.next(new Class1());
@@ -46,11 +46,11 @@ public class PersistGeneratorTest {
     @Test
     public void testIdOnlyTwoCounter(){
         currentTimeStub.setNow(2020,1,1);
-        persistConfigRepositoryStub.set("class1",new PersistConfig("{id}",10,"1"));
+        persistConfigRepositoryStub.set("class1",new PersistConfig("class1","{id}",10,"1",(byte)0));
 
         //使用两个生成器
-        PersistGenerator generator1 = new PersistGenerator(persistCounterGenerator);
-        PersistGenerator generator2 = new PersistGenerator(persistCounterGenerator);
+        PersistGenerator generator1 = new PersistGenerator(persistCounterGenerator,persistConfigRepositoryStub);
+        PersistGenerator generator2 = new PersistGenerator(persistCounterGenerator,persistConfigRepositoryStub);
 
         //生成器1，拿到1-10的段
         for( int i = 1 ;i <= 5;i++){
@@ -87,7 +87,7 @@ public class PersistGeneratorTest {
     @Test
     public void testTime(){
         currentTimeStub.setNow(2020,1,1);
-        persistConfigRepositoryStub.set("class1",new PersistConfig("WS{year}{month}{day}{id:4}",10,"WS202001012801"));
+        persistConfigRepositoryStub.set("class1",new PersistConfig("class1","WS{year}{month}{day}{id:4}",10,"WS202001012801",(byte)0));
 
         for( int i = 1 ;i <= 9;i++){
             String next = persistGenerator.next(new Class1());
@@ -103,7 +103,7 @@ public class PersistGeneratorTest {
     public void testTimeHasNextExpire(){
         System.out.println("In testTimeHasNextExpire");
         currentTimeStub.setNow(2020,1,1);
-        persistConfigRepositoryStub.set("class1",new PersistConfig("WS{year}{month}{day}{id:4}",10,"WS202001012801"));
+        persistConfigRepositoryStub.set("class1",new PersistConfig("class1","WS{year}{month}{day}{id:4}",10,"WS202001012801",(byte)0));
 
         System.out.println("No Expired");
         for( int i = 1 ;i <= 5;i++){
@@ -122,7 +122,7 @@ public class PersistGeneratorTest {
     @Test
     public void testTimeInitExpire(){
         currentTimeStub.setNow(2020,1,1);
-        persistConfigRepositoryStub.set("class1",new PersistConfig("WS{year}{month}{day}{id:4}",10,"WS201901012801"));
+        persistConfigRepositoryStub.set("class1",new PersistConfig("class1","WS{year}{month}{day}{id:4}",10,"WS201901012801",(byte)0));
 
         for( int i = 1 ;i <= 9;i++){
             String next = persistGenerator.next(new Class1());
@@ -138,11 +138,11 @@ public class PersistGeneratorTest {
     @Test
     public void testTimeExpireTwoCounter(){
         currentTimeStub.setNow(2020,1,1);
-        persistConfigRepositoryStub.set("class1",new PersistConfig("WS{year}{month}{day}{id:4}",10,"WS202001012801"));
+        persistConfigRepositoryStub.set("class1",new PersistConfig("class1","WS{year}{month}{day}{id:4}",10,"WS202001012801",(byte)0));
 
         //使用两个生成器
-        PersistGenerator generator1 = new PersistGenerator(persistCounterGenerator);
-        PersistGenerator generator2 = new PersistGenerator(persistCounterGenerator);
+        PersistGenerator generator1 = new PersistGenerator(persistCounterGenerator,persistConfigRepositoryStub);
+        PersistGenerator generator2 = new PersistGenerator(persistCounterGenerator,persistConfigRepositoryStub);
 
         //counter1
         for( int i = 1 ;i <= 5;i++){

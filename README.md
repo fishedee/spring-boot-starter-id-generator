@@ -8,6 +8,7 @@ Java的ID生成器，功能：
 * 性能好，可配置缓存式id获取，按段获取id，只有当前id段都使用完成后才重新拉数据库
 * 灵活，支持id中嵌套固定的数字和字母，以及当前日期的信息。例如配置为XSDD{year}{month}{day}{id:8}，生成id值为XSDD2021082200000010。
 * 热部署，可以在数据库中动态配置每个key不同的生成方式
+* 同步功能，可以指定key的生成是同步生成，保证无间隙的ID生成
 
 ## 安装
 
@@ -23,7 +24,7 @@ Java的ID生成器，功能：
     <dependency>
         <groupId>com.github.fishedee</groupId>
         <artifactId>spring-boot-starter-id-generator</artifactId>
-        <version>1.7</version>
+        <version>1.8</version>
     </dependency>
 </dependencies>
 
@@ -42,12 +43,14 @@ create table id_generator_config(
     template char(64) not null,
     step integer not null,
     initial_value char(64) not null,
+    is_sync tinyint not null,
     primary key(`key`)
 )engine=innodb default charset=utf8mb4;
 
-insert into id_generator_config(`key`,template,step,initial_value) values
-('user.user','{id}',10,1000),
-('order.sales_order','XSDD{year}{month}{day}{id:8}',10,'0');
+insert into id_generator_config(`key`,template,step,initial_value,tinyint) values
+('user.user','{id}',10,1000,0),
+('order.sales_order','XSDD{year}{month}{day}{id:8}',10,'0',0),
+('order.purchase_order','CGDD{year}{month}{day}{id:8}',1,'0',1);
 ```
 
 初始化数据库

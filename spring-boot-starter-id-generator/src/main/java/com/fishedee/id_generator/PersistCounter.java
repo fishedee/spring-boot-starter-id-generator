@@ -24,6 +24,8 @@ public class PersistCounter {
 
     private Long currentId;
 
+    private boolean isSync;
+
     public PersistCounter(CurrentTime currentTime,PersistConfig config){
         this.currentTime = currentTime;
         this.initPlaceTemplate(config);
@@ -31,6 +33,24 @@ public class PersistCounter {
         Date now = this.currentTime.now();
         this.resetTimeIfExpire(now);
         this.initId();
+        this.initSync(config);
+    }
+
+    private void initSync(PersistConfig config){
+        if( config.getIsSync().byteValue() == 1 ){
+            if( config.getStep() != 1){
+                throw new RuntimeException("IdGeneratorConfig["+config.getKey()+"]设置为同步的时候，step必须为1");
+            }
+            this.isSync = true;
+        }else if( config.getIsSync().byteValue() == 0 ){
+            this.isSync = false;
+        }else{
+            throw new RuntimeException("IdGeneratorConfig["+config.getKey()+"]的不合法isSync["+config.getIsSync()+"]");
+        }
+    }
+
+    public boolean getIsSync(){
+        return this.isSync;
     }
 
     private void initPlaceTemplate(PersistConfig config){
