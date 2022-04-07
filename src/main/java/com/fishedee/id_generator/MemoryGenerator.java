@@ -19,6 +19,14 @@ public class MemoryGenerator extends AbstractGenerator {
         return initial.toString();
     }
 
+    public void setKeyId(String key,Long value){
+        this.mapClass.put(key,value);
+    }
+
+    public Long getKeyId(String key){
+        return this.mapClass.get(key);
+    }
+
     public void clear(){
         this.mapClass.clear();
     }
