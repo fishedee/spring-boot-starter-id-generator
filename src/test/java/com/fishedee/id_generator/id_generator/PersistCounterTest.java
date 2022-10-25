@@ -205,6 +205,14 @@ public class PersistCounterTest {
     }
 
     @Test
+    public void testInitialValueEmpty(){
+        currentTimeStub.setNow(1999,2,2);
+        PersistCounter counter = new PersistCounter(currentTimeStub,new PersistConfig("testKey","XS{year}{month}{day}{id}",9,"",(byte)0));
+        assertEquals(counter.hasNext(),true);
+        assertEquals(counter.next(),"XS199902021");
+    }
+
+    @Test
     public void testStepNagative(){
         currentTimeStub.setNow(1999,2,2);
         IdGeneratorException e = assertThrows(IdGeneratorException.class,()->{

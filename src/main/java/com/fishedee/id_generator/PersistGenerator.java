@@ -41,6 +41,7 @@ public class PersistGenerator extends AbstractGenerator{
         //获取同步配置
         Boolean isSync = syncCounterConfig.get(key);
         if( isSync == null ){
+            //这里不用for update获取，是因为外部可能有事务，直接用for update会可能导致死锁
             PersistConfig config = persistConfigRepository.get(key);
             isSync = (config.getIsSync() == 1);
             syncCounterConfig.put(key,isSync);
