@@ -9,6 +9,7 @@ Java的ID生成器，功能：
 * 灵活，支持id中嵌套固定的数字和字母，以及当前日期的信息。例如配置为XSDD{year}{month}{day}{id:8}，生成id值为XSDD2021082200000010。
 * 热部署，可以在数据库中动态配置每个key不同的生成方式
 * 同步功能，可以指定key的生成是同步生成，保证无间隙的ID生成
+* try_id功能，数据库只返回下一个可能的编号，而不是保证唯一的编号，这样是为了尽可能最小化ID间距
 
 ## 安装
 
@@ -24,7 +25,7 @@ Java的ID生成器，功能：
     <dependency>
         <groupId>com.github.fishedee</groupId>
         <artifactId>spring-boot-starter-id-generator</artifactId>
-        <version>1.10</version>
+        <version>1.11</version>
     </dependency>
 </dependencies>
 
@@ -37,8 +38,10 @@ Java的ID生成器，功能：
 代码在[这里](https://github.com/fishedee/Demo/tree/master/spring-boot-starter-id-generator/Demo)
 
 ```sql
-drop table if exists id_generator_config;
-create table id_generator_config(
+drop table if exists my_generator_config;
+drop table if exists my_try_generator_config;
+
+create table my_generator_config(
     `key` char(32) not null,
     template char(64) not null,
     step integer not null,
@@ -47,10 +50,21 @@ create table id_generator_config(
     primary key(`key`)
 )engine=innodb default charset=utf8mb4;
 
-insert into id_generator_config(`key`,template,step,initial_value,is_sync) values
+create table my_try_generator_config(
+    `key` char(32) not null,
+    template char(64) not null,
+    initial_value char(64) not null,
+    primary key(`key`)
+)engine=innodb default charset=utf8mb4;
+
+insert into my_generator_config(`key`,template,step,initial_value,is_sync) values
 ('user.user','{id}',10,1000,0),
 ('order.sales_order','XSDD{year}{month}{day}{id:8}',10,'0',0),
 ('order.purchase_order','CGDD{year}{month}{day}{id:8}',1,'0',1);
+
+insert into my_try_generator_config(`key`,template,initial_value)values
+('try_id','{id}','1'),
+('try_order_id','XS{year}{id:2+}','');
 ```
 
 初始化数据库
@@ -59,6 +73,7 @@ insert into id_generator_config(`key`,template,step,initial_value,is_sync) value
 spring.id-generator.enable = true
 #默认表名为id_generator_config，可自定义
 #spring.id-generator.table = my_generator_config
+#spring.id-generator.try_table = my_try_generator_config
 ```
 
 初始化

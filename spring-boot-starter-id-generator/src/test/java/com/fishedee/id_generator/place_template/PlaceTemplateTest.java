@@ -75,6 +75,52 @@ public class PlaceTemplateTest {
     }
 
     @Test
+    public void placeholder_overPadding(){
+        PlaceTemplate template = new PlaceTemplate("ACV{ id :  4   + }cg{year:2+}");
+        //format
+        Param param = new Param();
+        param.put("id",1234L);
+        param.put("year",56L);
+        String result = template.format(param);
+        assertEquals("ACV1234cg56",result);
+
+        //extractParam
+        Param param_o = template.extractParam(result);
+        JsonAssertUtil.checkEqualStrict(
+                "{id:1234,year:56}",
+                param_o
+        );
+
+        //format2
+        Param param2 = new Param();
+        param2.put("id",23L);
+        param2.put("year",1L);
+        String result2 = template.format(param2);
+        assertEquals("ACV0023cg01",result2);
+
+        //extractParam2
+        Param param2_o = template.extractParam(result2);
+        JsonAssertUtil.checkEqualStrict(
+                "{id:23,year:1}",
+                param2_o
+        );
+
+        //format3
+        Param param3 = new Param();
+        param3.put("id",12345678L);
+        param3.put("year",987654321L);
+        String result3 = template.format(param3);
+        assertEquals("ACV12345678cg987654321",result3);
+
+        //extractParam3
+        Param param3_o = template.extractParam(result3);
+        JsonAssertUtil.checkEqualStrict(
+                "{id:12345678,year:987654321}",
+                param3_o
+        );
+    }
+
+    @Test
     public void placeholder_last(){
         PlaceTemplate template = new PlaceTemplate("CC {year}");
 
@@ -113,10 +159,10 @@ public class PlaceTemplateTest {
     @Test
     public void resetRenderAndParser(){
         PlaceTemplate template = new PlaceTemplate("{year}{day}");
-        template.addParser("year",new PaddingParser(4));
-        template.addRender("year",new PaddingRender(4));
-        template.addParser("day",new PaddingParser(2));
-        template.addRender("day",new PaddingRender(2));
+        template.addParser("year",new PaddingParser(false,4));
+        template.addRender("year",new PaddingRender(false,4));
+        template.addParser("day",new PaddingParser(false,2));
+        template.addRender("day",new PaddingRender(false,2));
 
         //format
         Param param = new Param();

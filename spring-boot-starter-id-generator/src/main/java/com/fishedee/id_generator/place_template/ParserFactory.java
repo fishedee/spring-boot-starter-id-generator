@@ -9,8 +9,16 @@ public class ParserFactory {
             return new DefaultParser();
         }else{
             try{
-                int argumentValue = Integer.valueOf(argument);
-                return new PaddingParser(argumentValue);
+                boolean allowOverPadding = false;
+                int argumentValue = 0;
+                if( argument.charAt(argument.length()-1) == '+'){
+                    allowOverPadding = true;
+                    argumentValue = Integer.valueOf(argument.substring(0,argument.length()-1).trim());
+                }else{
+                    allowOverPadding = false;
+                    argumentValue = Integer.valueOf(argument);
+                }
+                return new PaddingParser(allowOverPadding,argumentValue);
             }catch(NumberFormatException e){
                 throw new IdGeneratorException(1,"模板参数错误["+argument+"]",null);
             }

@@ -5,55 +5,31 @@ import com.fishedee.id_generator.place_template.PaddingRender;
 import com.fishedee.id_generator.place_template.Param;
 import com.fishedee.id_generator.place_template.PlaceTemplate;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Calendar;
 import java.util.Date;
 
 @Slf4j
-public class PersistCounter {
+public class TryPersistCounter {
     private CurrentTime currentTime;
 
     private PlaceTemplate placeTemplate;
 
     private Param placeTemplateParam;
 
-    private int step;
-
     private Long initId;
 
     private Long currentId;
 
-    private boolean isSync;
-
-    public PersistCounter(CurrentTime currentTime,PersistConfig config){
+    public TryPersistCounter(CurrentTime currentTime,TryPersist config){
         this.currentTime = currentTime;
         this.initPlaceTemplate(config);
-        this.initStep(config.getStep());
         Date now = this.currentTime.now();
         this.resetTimeIfExpire(now);
         this.initId();
-        this.initSync(config);
     }
 
-    private void initSync(PersistConfig config){
-        if( config.getIsSync().byteValue() == 1 ){
-            if( config.getStep() != 1){
-                throw new RuntimeException("IdGeneratorConfig["+config.getKey()+"]设置为同步的时候，step必须为1");
-            }
-            this.isSync = true;
-        }else if( config.getIsSync().byteValue() == 0 ){
-            this.isSync = false;
-        }else{
-            throw new RuntimeException("IdGeneratorConfig["+config.getKey()+"]的不合法isSync["+config.getIsSync()+"]");
-        }
-    }
-
-    public boolean getIsSync(){
-        return this.isSync;
-    }
-
-    private void initPlaceTemplate(PersistConfig config){
+    private void initPlaceTemplate(TryPersist config){
         this.placeTemplate = new PlaceTemplate(config.getTemplate());
         //默认配置
         this.placeTemplate.addRender("year",new PaddingRender(false,4));
@@ -63,13 +39,6 @@ public class PersistCounter {
         this.placeTemplate.addRender("day",new PaddingRender(false,2));
         this.placeTemplate.addParser("day",new PaddingParser(false,2));
         this.placeTemplateParam = this.placeTemplate.extractParam(config.getInitialValue());
-    }
-
-    private void initStep(int step){
-        if( step <= 0 ){
-            throw new IdGeneratorException(1,"步长不能为负数或者0:"+step,null);
-        }
-        this.step = step;
     }
 
     private boolean isTimeExpire(Date now){
@@ -155,32 +124,29 @@ public class PersistCounter {
         this.currentId = this.initId;
     }
 
-    public boolean hasNext(){
-        Date now = currentTime.now();
+    public String peek(){
+        Date now = this.currentTime.now();
         if( isTimeExpire(now)){
-            return false;
+            this.next();
         }
-
-        if( this.currentId >= this.initId + this.step){
-            return false;
-        }
-        return true;
-    }
-
-    public String next(){
         this.placeTemplateParam.put("id",this.currentId);
-        this.currentId++;
         return this.placeTemplate.format(this.placeTemplateParam);
     }
 
-    public PersistConfig getNextConfig(){
-        this.placeTemplateParam.put("id",this.initId+this.step);
-        String nextInitalValue = this.placeTemplate.format(this.placeTemplateParam);
+    public void next(){
+        Date now = this.currentTime.now();
+        if( isTimeExpire(now)){
+            this.resetTimeIfExpire(now);
+            this.initId();
+        }else{
+            this.currentId++;
+        }
+    }
 
-        PersistConfig config = new PersistConfig();
-        config.setTemplate(this.placeTemplate.getTemplate());
-        config.setStep(this.step);
-        config.setInitialValue(nextInitalValue);
-        return config;
+    public TryPersist getNextTry(){
+        TryPersist result = new TryPersist();
+        result.setInitialValue(peek());
+        result.setTemplate(this.placeTemplate.getTemplate());
+        return result;
     }
 }

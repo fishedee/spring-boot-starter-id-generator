@@ -1,9 +1,6 @@
 package com.fishedee.id_generator.id_generator;
 
-import com.fishedee.id_generator.CurrentTime;
-import com.fishedee.id_generator.PersistConfigRepository;
-import com.fishedee.id_generator.PersistCounterGenerator;
-import com.fishedee.id_generator.PersistGenerator;
+import com.fishedee.id_generator.*;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -23,10 +20,22 @@ public class MyConfig {
         return new PersistConfigRepositoryStub();
     }
 
+    @Bean
+    @Primary
+    public TryPersistRepository getTryPersistRepository(){return new TryPersistRepositoryStub();}
 
     @Bean
     @Primary
-    public PersistCounterGenerator persistCounterGenerator(){return new PersistCounterGenerator();}
+    public PersistCounterGenerator persistCounterGenerator(){
+        return new PersistCounterGenerator();
+    }
+
+
+    @Bean
+    @Primary
+    public TryPersistGenerator tryPersistCounterGenerator(){
+        return new TryPersistGenerator();
+    }
 
     @Bean
     @Primary
