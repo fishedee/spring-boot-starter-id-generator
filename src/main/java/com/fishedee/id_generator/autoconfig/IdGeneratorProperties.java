@@ -11,4 +11,8 @@ public class IdGeneratorProperties {
     private String table = "id_generator_config";
 
     private String tryTable = "try_id_generator_config";
+
+    private String beginEscapeCharacter = "`";
+
+    private String endEscapeCharacter = "`";
 }

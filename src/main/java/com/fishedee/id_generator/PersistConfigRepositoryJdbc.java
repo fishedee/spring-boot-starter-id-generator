@@ -19,9 +19,9 @@ public class PersistConfigRepositoryJdbc implements PersistConfigRepository {
 
     private String selectAllSql;
 
-    public PersistConfigRepositoryJdbc(String tableName){
-        this.selectSql = String.format("select `key`,template,step,initial_value,is_sync from `%s` where `key` = ?",tableName);
-        this.updateSql = String.format("update `%s` set initial_value = ? where `key` = ?",tableName);
+    public PersistConfigRepositoryJdbc(String tableName,String beginCharacter,String endCharacter){
+        this.selectSql = "select "+beginCharacter+"key"+endCharacter+",template,step,initial_value,is_sync from "+beginCharacter+tableName+endCharacter+ " where "+beginCharacter+"key"+endCharacter+" = ?";
+        this.updateSql = "update "+beginCharacter+tableName+endCharacter+" set initial_value = ? where "+beginCharacter+"key"+endCharacter+" = ?";
     }
 
     private PersistConfig convertToConfig(Map<String,Object> single){
