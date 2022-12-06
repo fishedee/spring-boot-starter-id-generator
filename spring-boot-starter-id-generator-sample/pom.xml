@@ -4,7 +4,7 @@
 
   <groupId>com.fishedee.id_generator.sample</groupId>
   <artifactId>spring-boot-starter-id-generator-sample</artifactId>
-  <version>1.11</version>
+  <version>1.12</version>
   <packaging>jar</packaging>
 
   <name>spring-boot-starter-id-generator-sample</name>
@@ -42,12 +42,17 @@
     <dependency>
       <groupId>com.fishedee.id_generator</groupId>
       <artifactId>spring-boot-starter-id-generator</artifactId>
-      <version>1.11</version>
+      <version>1.12</version>
     </dependency>
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
       <version>8.0.18</version>
+    </dependency>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>42.5.0</version>
     </dependency>
   </dependencies>
 

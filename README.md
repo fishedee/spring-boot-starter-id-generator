@@ -25,7 +25,7 @@ Java的ID生成器，功能：
     <dependency>
         <groupId>com.github.fishedee</groupId>
         <artifactId>spring-boot-starter-id-generator</artifactId>
-        <version>1.11</version>
+        <version>1.12</version>
     </dependency>
 </dependencies>
 
@@ -74,6 +74,8 @@ spring.id-generator.enable = true
 #默认表名为id_generator_config，可自定义
 #spring.id-generator.table = my_generator_config
 #spring.id-generator.try_table = my_try_generator_config
+#spring.id-generator.begin-escape-character = "
+#spring.id-generator.end-escape-character = "
 ```
 
 初始化

@@ -15,9 +15,9 @@ public class TryPersistRepositoryJdbc implements TryPersistRepository{
 
     private String updateSql;
 
-    public TryPersistRepositoryJdbc(String tableName){
-        this.selectSql = String.format("select `key`,template,initial_value from `%s` where `key` = ?",tableName);
-        this.updateSql = String.format("update `%s` set initial_value = ? where `key` = ?",tableName);
+    public TryPersistRepositoryJdbc(String tableName,String beginCharacter,String endCharacter){
+        this.selectSql = "select "+beginCharacter+"key"+endCharacter+",template,initial_value from "+beginCharacter+tableName+endCharacter+ " where "+beginCharacter+"key"+endCharacter+" = ?";
+        this.updateSql = "update "+beginCharacter+tableName+endCharacter+" set initial_value = ? where "+beginCharacter+"key"+endCharacter+" = ?";
     }
 
     private TryPersist convertToConfig(Map<String,Object> single){
