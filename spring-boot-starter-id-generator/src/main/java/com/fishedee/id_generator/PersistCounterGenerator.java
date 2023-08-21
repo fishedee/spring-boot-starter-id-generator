@@ -9,11 +9,14 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 
 @Slf4j
 public class PersistCounterGenerator {
-    @Autowired
     private PersistConfigRepository persistConfigRepository;
 
-    @Autowired
     private CurrentTime currentTime;
+
+    public PersistCounterGenerator(PersistConfigRepository persistConfigRepository,CurrentTime currentTime){
+        this.persistConfigRepository = persistConfigRepository;
+        this.currentTime = currentTime;
+    }
 
     //REQUIRES_NEW让id不随外部事务提交而变化
     @Transactional(propagation = Propagation.REQUIRES_NEW,rollbackFor = RuntimeException.class)
