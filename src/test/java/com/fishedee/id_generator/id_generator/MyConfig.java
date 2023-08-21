@@ -26,8 +26,8 @@ public class MyConfig {
 
     @Bean
     @Primary
-    public PersistCounterGenerator persistCounterGenerator(){
-        return new PersistCounterGenerator();
+    public PersistCounterGenerator persistCounterGenerator(PersistConfigRepository persistConfigRepository,CurrentTime currentTime){
+        return new PersistCounterGenerator(persistConfigRepository,currentTime);
     }
 
 
