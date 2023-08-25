@@ -15,9 +15,14 @@ public class MyConfig {
     }
 
     @Bean
+    public TenantResolverStub getTenantResolve(){
+        return new TenantResolverStub();
+    }
+
+    @Bean
     @Primary
-    public PersistConfigRepository getPersistConfigRepository(){
-        return new PersistConfigRepositoryStub();
+    public PersistConfigRepository getPersistConfigRepository(TenantResolver tenantResolver){
+        return new PersistConfigRepositoryStub(tenantResolver);
     }
 
     @Bean
@@ -30,7 +35,6 @@ public class MyConfig {
         return new PersistCounterGenerator(persistConfigRepository,currentTime);
     }
 
-
     @Bean
     @Primary
     public TryPersistGenerator tryPersistCounterGenerator(){
@@ -39,6 +43,6 @@ public class MyConfig {
 
     @Bean
     @Primary
-    public PersistGenerator persistGenerator(PersistCounterGenerator counterGenerator,PersistConfigRepository configRepository){return new PersistGenerator(counterGenerator,configRepository);}
+    public PersistGenerator persistGenerator(PersistCounterGenerator counterGenerator,PersistConfigRepository configRepository,TenantResolver tenantResolver){return new PersistGenerator(counterGenerator,configRepository,tenantResolver);}
 
 }

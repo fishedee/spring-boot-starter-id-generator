@@ -26,14 +26,24 @@ public class PersistCounter {
 
     private boolean isSync;
 
+    private String tenantId;
+
     public PersistCounter(CurrentTime currentTime,PersistConfig config){
         this.currentTime = currentTime;
+        this.tenantId = null;
         this.initPlaceTemplate(config);
         this.initStep(config.getStep());
         Date now = this.currentTime.now();
         this.resetTimeIfExpire(now);
         this.initId();
         this.initSync(config);
+    }
+
+    public void setTenantId(String tenantId){
+        if( this.tenantId != null ){
+            throw new RuntimeException("tenantId不能重复设置");
+        }
+        this.tenantId = tenantId;
     }
 
     private void initSync(PersistConfig config){

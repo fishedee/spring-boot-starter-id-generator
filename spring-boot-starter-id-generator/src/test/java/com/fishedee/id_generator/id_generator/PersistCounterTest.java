@@ -21,6 +21,9 @@ public class PersistCounterTest {
     private CurrentTimeStub currentTimeStub;
 
     @Autowired
+    private TenantResolver tenantResolver;
+
+    @Autowired
     private PersistConfigRepositoryStub persistConfigRepositoryStub;
 
     @Test
