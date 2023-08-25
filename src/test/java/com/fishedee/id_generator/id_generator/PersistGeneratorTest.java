@@ -1,9 +1,6 @@
 package com.fishedee.id_generator.id_generator;
 
-import com.fishedee.id_generator.IdGeneratorKey;
-import com.fishedee.id_generator.PersistConfig;
-import com.fishedee.id_generator.PersistCounterGenerator;
-import com.fishedee.id_generator.PersistGenerator;
+import com.fishedee.id_generator.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +19,9 @@ public class PersistGeneratorTest {
     }
     @Autowired
     private CurrentTimeStub currentTimeStub;
+
+    @Autowired
+    private TenantResolverStub tenantResolverStub;
 
     @Autowired
     private PersistConfigRepositoryStub persistConfigRepositoryStub;
@@ -49,8 +49,8 @@ public class PersistGeneratorTest {
         persistConfigRepositoryStub.set("class1",new PersistConfig("class1","{id}",10,"1",(byte)0));
 
         //使用两个生成器
-        PersistGenerator generator1 = new PersistGenerator(persistCounterGenerator,persistConfigRepositoryStub);
-        PersistGenerator generator2 = new PersistGenerator(persistCounterGenerator,persistConfigRepositoryStub);
+        PersistGenerator generator1 = new PersistGenerator(persistCounterGenerator,persistConfigRepositoryStub,tenantResolverStub);
+        PersistGenerator generator2 = new PersistGenerator(persistCounterGenerator,persistConfigRepositoryStub,tenantResolverStub);
 
         //生成器1，拿到1-10的段
         for( int i = 1 ;i <= 5;i++){
@@ -141,8 +141,8 @@ public class PersistGeneratorTest {
         persistConfigRepositoryStub.set("class1",new PersistConfig("class1","WS{year}{month}{day}{id:4}",10,"WS202001012801",(byte)0));
 
         //使用两个生成器
-        PersistGenerator generator1 = new PersistGenerator(persistCounterGenerator,persistConfigRepositoryStub);
-        PersistGenerator generator2 = new PersistGenerator(persistCounterGenerator,persistConfigRepositoryStub);
+        PersistGenerator generator1 = new PersistGenerator(persistCounterGenerator,persistConfigRepositoryStub,tenantResolverStub);
+        PersistGenerator generator2 = new PersistGenerator(persistCounterGenerator,persistConfigRepositoryStub,tenantResolverStub);
 
         //counter1
         for( int i = 1 ;i <= 5;i++){
