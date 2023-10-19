@@ -37,8 +37,8 @@ public class App implements ApplicationRunner
 
     @Override
     public void run(ApplicationArguments args) throws Exception{
-        //persistGeneratorTest.run();
+        persistGeneratorTest.runWithClearCache();
 
-        tryPersistGeneratorTest.run();
+        //tryPersistGeneratorTest.run();
     }
 }

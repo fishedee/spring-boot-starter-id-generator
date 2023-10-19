@@ -27,7 +27,8 @@ public class MemoryGenerator extends AbstractGenerator {
         return this.mapClass.get(key);
     }
 
-    public void clear(){
+    @Override
+    public void clearCache(boolean isClearAllTenant){
         this.mapClass.clear();
     }
 }

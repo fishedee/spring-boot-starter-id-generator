@@ -16,4 +16,6 @@ public interface IdGenerator {
     String next(String key);
 
     Long nextLong(String key);
+
+    void clearCache(boolean isClearAllTenant);
 }

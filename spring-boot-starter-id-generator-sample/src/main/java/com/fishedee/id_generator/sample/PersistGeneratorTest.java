@@ -48,7 +48,7 @@ public class PersistGeneratorTest {
         app.testUpdateSyncAndAsyncInner(orderKey2,orderKey);
     }
 
-    public void run() throws Exception{
+    public void runNormal() throws Exception{
         testUpdateSyncAndAsync();
         String userKey = "user.user";
         for( int i = 0 ;i != 10 ;i++){
@@ -76,6 +76,23 @@ public class PersistGeneratorTest {
         String orderKey2 = "order.purchase_order";
         for( int i = 0 ;i != 20 ;i++){
             this.nextKeyWithThrowControl(orderKey2,i%3==0);
+        }
+    }
+
+    public void runWithClearCache() throws Exception {
+        String orderKey = "order.sales_order";
+        for( int i = 0 ;i != 5 ;i++){
+            log.info("{} {}",orderKey,idGenerator.next(new SalesOrder()));
+        }
+        //清除所有的cache
+        idGenerator.clearCache(false);
+        for( int i = 0 ;i != 5 ;i++){
+            log.info("{} {}",orderKey,idGenerator.next(new SalesOrder()));
+        }
+        //清除所有的cache，租户
+        idGenerator.clearCache(true);
+        for( int i = 0 ;i != 5 ;i++){
+            log.info("{} {}",orderKey,idGenerator.next(new SalesOrder()));
         }
     }
 }
