@@ -10,7 +10,8 @@ Java的ID生成器，功能：
 * 热部署，可以在数据库中动态配置每个key不同的生成方式
 * 同步功能，可以指定key的生成是同步生成，保证无间隙的ID生成
 * try_id功能，数据库只返回下一个可能的编号，而不是保证唯一的编号，这样是为了尽可能最小化ID间距
-* 支持多租户的ID生成
+* 多租户，支持多租户的ID生成
+* 延迟配置，支持使用时才配置id-generator-config
 
 ## 安装
 
@@ -26,7 +27,7 @@ Java的ID生成器，功能：
     <dependency>
         <groupId>com.github.fishedee</groupId>
         <artifactId>spring-boot-starter-id-generator</artifactId>
-        <version>1.15</version>
+        <version>1.16</version>
     </dependency>
 </dependencies>
 

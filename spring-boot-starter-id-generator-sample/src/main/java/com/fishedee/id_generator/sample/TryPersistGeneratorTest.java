@@ -47,6 +47,24 @@ public class TryPersistGeneratorTest {
         }
     }
 
+    @Transactional
+    public void testOrderId2(){
+        for( int i = 0 ;i != 2;i++){
+            String key1 = tryPersistGenerator.getPeek("try_st");
+            log.info("try_st key = "+key1);
+        }
+
+        for( int i = 0 ;i != 95;i++){
+            tryPersistGenerator.moveNext("try_st");
+        }
+
+        for( int i = 0 ;i != 10;i++){
+            tryPersistGenerator.moveNext("try_st");
+            String key1 = tryPersistGenerator.getPeek("try_st");
+            log.info("try_st key = "+key1);
+        }
+    }
+
     public void run(){
         TryPersistGeneratorTest app = (TryPersistGeneratorTest) AopContext.currentProxy();
         log.info("--- test 1 ---");
@@ -60,5 +78,11 @@ public class TryPersistGeneratorTest {
 
         log.info("--- test 4 ---");
         app.testOrderId();
+
+        log.info("--- test 5 ---");
+        app.testOrderId2();
+
+        log.info("--- test 6 ---");
+        app.testOrderId2();
     }
 }

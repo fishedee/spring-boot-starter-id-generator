@@ -94,5 +94,15 @@ public class PersistGeneratorTest {
         for( int i = 0 ;i != 5 ;i++){
             log.info("{} {}",orderKey,idGenerator.next(new SalesOrder()));
         }
+
+
+        String orderKey2 = "order.stock_order";
+        for( int i = 0 ;i != 5 ;i++){
+            log.info("{} {}",orderKey2,idGenerator.next(new StockOrder()));
+        }
+        idGenerator.clearCache(false);
+        for( int i = 0 ;i != 5 ;i++){
+            log.info("{} {}",orderKey2,idGenerator.next(new StockOrder()));
+        }
     }
 }
