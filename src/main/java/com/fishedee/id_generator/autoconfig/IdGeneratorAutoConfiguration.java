@@ -67,10 +67,23 @@ public class IdGeneratorAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean(TryIdGeneratorConfigResolver.class)
+    @ConditionalOnProperty(value = "spring.id-generator.enable", havingValue = "true")
+    public TryIdGeneratorConfigResolver tryIdGeneratorConfigResolver(){
+        return new TryIdGeneratorConfigResolverImpl();
+    }
+
+    @Bean
     @ConditionalOnMissingBean(IdGenerator.class)
     @ConditionalOnProperty(value = "spring.id-generator.enable", havingValue = "true")
     public IdGenerator idGenerator(PersistCounterGenerator counterGenerator,PersistConfigRepository persistConfigRepository,TenantResolver tenantResolver){
         return new PersistGenerator(counterGenerator,persistConfigRepository,tenantResolver);
     }
 
+    @Bean
+    @ConditionalOnMissingBean(IdGeneratorConfigResolver.class)
+    @ConditionalOnProperty(value = "spring.id-generator.enable", havingValue = "true")
+    public IdGeneratorConfigResolver idGeneratorConfigResolver(){
+        return new IdGeneratorConfigResolverImpl();
+    }
 }
