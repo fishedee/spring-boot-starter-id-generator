@@ -4,7 +4,7 @@
 
   <groupId>com.fishedee.id_generator</groupId>
   <artifactId>spring-boot-starter-id-generator</artifactId>
-  <version>1.16</version>
+  <version>1.17</version>
   <packaging>jar</packaging>
 
   <name>spring-boot-starter-id-generator</name>
@@ -17,8 +17,6 @@
     <!--只能用Idea来做单元测试，Maven test不支持-->
     <skipTests>true</skipTests>
   </properties>
-
-
 
   <dependencyManagement>
     <dependencies>
