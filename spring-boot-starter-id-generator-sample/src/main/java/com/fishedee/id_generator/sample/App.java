@@ -37,7 +37,10 @@ public class App implements ApplicationRunner
 
     @Override
     public void run(ApplicationArguments args) throws Exception{
-        persistGeneratorTest.runWithClearCache();
+        //persistGeneratorTest.runWithClearCache();
+
+        //带事务的启动，测试死锁问题
+        persistGeneratorTest.runWithTransactional();
 
         //tryPersistGeneratorTest.run();
     }

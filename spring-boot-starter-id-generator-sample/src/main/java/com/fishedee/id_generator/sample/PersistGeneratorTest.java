@@ -105,4 +105,12 @@ public class PersistGeneratorTest {
             log.info("{} {}",orderKey2,idGenerator.next(new StockOrder()));
         }
     }
+
+    @Transactional
+    public void runWithTransactional() throws Exception{
+        String orderKey2 = "order.cash_order";
+        for( int i = 0 ;i != 5 ;i++){
+            log.info("{} {}",orderKey2,idGenerator.next(new CashOrder()));
+        }
+    }
 }

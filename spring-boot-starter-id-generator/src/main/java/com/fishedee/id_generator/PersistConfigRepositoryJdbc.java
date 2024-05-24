@@ -50,7 +50,7 @@ public class PersistConfigRepositoryJdbc implements PersistConfigRepository {
         return result;
     }
 
-    private PersistConfig getAndAddDefaultConfig(String key){
+    private PersistConfig getAndAddDefaultConfig(String key,boolean insertWhenEmpty){
         PersistConfig config = idGeneratorConfigResolver.get(key);
         if( config == null ){
             throw new RuntimeException("没有"+key+"的主键生成器");
@@ -61,14 +61,16 @@ public class PersistConfigRepositoryJdbc implements PersistConfigRepository {
                     config.getKey());
             throw new RuntimeException(msg);
         }
-        this.add(key,config);
+        if(insertWhenEmpty){
+            this.add(key,config);
+        }
         return new PersistConfig(config);
     }
     public PersistConfig get(String key){
         List<Map<String,Object>> mapList = jdbcTemplate.queryForList(this.selectSql,key);
 
         if( mapList.size() == 0 ){
-            return this.getAndAddDefaultConfig(key);
+            return this.getAndAddDefaultConfig(key,false);
         }
         return this.convertToConfig(mapList.get(0));
     }
@@ -79,7 +81,7 @@ public class PersistConfigRepositoryJdbc implements PersistConfigRepository {
         List<Map<String,Object>> mapList = jdbcTemplate.queryForList(this.selectSql+" for update",key);
 
         if( mapList.size() == 0 ){
-            return this.getAndAddDefaultConfig(key);
+            return this.getAndAddDefaultConfig(key,true);
         }
         return this.convertToConfig(mapList.get(0));
     }

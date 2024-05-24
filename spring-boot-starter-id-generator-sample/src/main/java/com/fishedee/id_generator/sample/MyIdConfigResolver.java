@@ -15,6 +15,13 @@ public  class MyIdConfigResolver implements IdGeneratorConfigResolver {
                     .setInitialValue("")
                     .setStep(10)
                     .setIsSync((byte)0);
+        }else if( key.equals("order.cash_order")){
+            return new PersistConfig()
+                    .setKey("order.cash_order")
+                    .setTemplate("CO{year}{month}{day}{id:4+}")
+                    .setInitialValue("")
+                    .setStep(10)
+                    .setIsSync((byte)0);
         }
         return null;
     }
