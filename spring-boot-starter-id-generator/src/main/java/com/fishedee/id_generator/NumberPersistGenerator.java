@@ -5,26 +5,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Date;
 
 public class NumberPersistGenerator implements NumberGenerator{
-    private Map<String,Map<String,NumberCounter>>
 
     @Autowired
-    private TryPersistRepository repository;
-
-    private TryPersistCounter getCounter(String key){
-        TryPersistTransactionalLifecycle.TryCache cache = TryPersistTransactionalLifecycle.getTryCache(this.repository);
-        TryPersistCounter counter = cache.get(key);
-        if( counter == null ){
-            TryPersist dbPersist = this.repository.getForUpdate(key);
-            counter = new TryPersistCounter(this.currentTime, dbPersist);
-            cache.put(key,counter);
-        }
-        return counter;
-    }
+    private NumberPersistRepository repository;
 
     @Override
     public NumberCounter get(Date dateTime, String key) {
-        //同步化代码，只有一个线程能进入这里
-        synchronized (this) {
+        NumberPersistTransactionalLifecycle.NumberPersistCache cache = NumberPersistTransactionalLifecycle.getCache();
+
+        //优先取缓存的config
+        NumberPersist config = cache.getConfig(key);
+        if( config == null ){
+            config = this.repository.get(key);
         }
+
+        //优先取缓存的counter
+        NumberCounter counter = new NumberCounter(dateTime,config);
+        return cache.getCounter(key,counter);
     }
 }

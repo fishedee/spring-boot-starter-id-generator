@@ -7,52 +7,58 @@ import java.util.*;
 
 public class NumberPersistTransactionalLifecycle {
 
-    public static class TryCache{
-        private Map<String, TryPersistCounter> data = new HashMap<>();
+    public static class NumberPersistCache{
+        private Map<String, Map<String,NumberCounter>> counterMap = new HashMap<>();
 
-        private TryPersistRepository repository;
+        private Map<String,NumberPersist> configMap = new HashMap<>();
 
-        public TryCache(TryPersistRepository repository){
-            this.repository = repository;
+        public NumberPersistCache(){
         }
 
-        public void put(String key,TryPersistCounter counter){
-            this.data.put(key,counter);
+        public NumberPersist getConfig(String key){
+            return configMap.get(key);
         }
 
-        public TryPersistCounter get(String key){
-            return this.data.get(key);
+        public NumberCounter getCounter(String key,NumberCounter defaultCounter){
+            Map<String,NumberCounter> keyCounters = counterMap.get(key);
+            if( keyCounters == null ){
+                keyCounters = new HashMap<>();
+                counterMap.put(key,keyCounters);
+            }
+            String matchRegex = defaultCounter.getMatchIdRegex();
+            NumberCounter oldCounter = keyCounters.get(matchRegex);
+            if( oldCounter != null ){
+                //优先使用oldCounter
+                return oldCounter;
+            }
+            keyCounters.put(matchRegex,defaultCounter);
+            configMap.put(key,defaultCounter.getConfig());
+            return defaultCounter;
         }
 
-        public void flushToDb(){
-            this.data.forEach((key,value)->{
-                this.repository.set(key,value.getNextTry());
-            });
-        }
     }
 
-    public static TryCache getTryCache(TryPersistRepository repository){
+    public static NumberPersistCache getCache(){
         if( TransactionSynchronizationManager.isActualTransactionActive() == false ){
             throw new RuntimeException("事务未开启，不能使用TryPersist功能");
         }
-        boolean hasTryCache = TransactionSynchronizationManager.hasResource(TryCache.class);
-        TryCache tryCache;
-        if( hasTryCache == false ){
-            tryCache = initTryCache(repository);
+        boolean hasNumberCache = TransactionSynchronizationManager.hasResource(NumberPersistCache.class);
+        NumberPersistCache numberPersistCache;
+        if( hasNumberCache == false ){
+            numberPersistCache = initNumberPersistCache();
         }else{
-            tryCache = (TryCache)TransactionSynchronizationManager.getResource(TryCache.class);
+            numberPersistCache = (NumberPersistCache)TransactionSynchronizationManager.getResource(NumberPersistCache.class);
         }
-        return tryCache;
+        return numberPersistCache;
     }
 
-    private static TryCache initTryCache(TryPersistRepository repository){
-        final TryCache tryCache = new TryCache(repository);
+    private static NumberPersistCache initNumberPersistCache(){
+        final NumberPersistCache numberCounterCache = new NumberPersistCache();
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter(){
 
             //只有可以commit才会回调,在提交前回调
             @Override
             public void beforeCommit(boolean readOnly) {
-                tryCache.flushToDb();
             }
 
             //只有可以commit才会回调,在提交后回调
@@ -70,10 +76,10 @@ public class NumberPersistTransactionalLifecycle {
             @Override
             public void afterCompletion(int status) {
                 //清理数据
-                TransactionSynchronizationManager.unbindResourceIfPossible(TryCache.class);
+                TransactionSynchronizationManager.unbindResourceIfPossible(NumberPersistCache.class);
             }
         });
-        TransactionSynchronizationManager.bindResource(TryCache.class,tryCache);
-        return tryCache;
+        TransactionSynchronizationManager.bindResource(NumberPersistCache.class,numberCounterCache);
+        return numberCounterCache;
     }
 }
