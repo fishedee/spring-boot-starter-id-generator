@@ -4,6 +4,7 @@ import com.fishedee.id_generator.place_template.PaddingParser;
 import com.fishedee.id_generator.place_template.PaddingRender;
 import com.fishedee.id_generator.place_template.Param;
 import com.fishedee.id_generator.place_template.PlaceTemplate;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -29,6 +30,7 @@ public class NumberCounter {
         this.hasInit = false;
         this.currentId = 1L;
         this.initPlaceTemplate(config);
+        this.initPlaceTemplateParam();
     }
 
     private void initPlaceTemplate(NumberPersist config){
@@ -40,14 +42,10 @@ public class NumberCounter {
         this.placeTemplate.addParser("month",new PaddingParser(false,2));
         this.placeTemplate.addRender("day",new PaddingRender(false,2));
         this.placeTemplate.addParser("day",new PaddingParser(false,2));
-        this.placeTemplateParam = this.placeTemplate.extractParam("0");
+        this.placeTemplateParam = this.placeTemplate.extractParam("");
     }
 
-    public boolean hasInitId(){
-        return hasInit;
-    }
-
-    public void initId(Optional<Long> maxId){
+    private void initPlaceTemplateParam(){
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(this.dateTime);
 
@@ -71,6 +69,16 @@ public class NumberCounter {
             throw new IdGeneratorException(1,"模板里面缺乏id参数",null);
         }
         this.placeTemplateParam.put("id",1L);
+    }
+
+    public boolean hasInitId(){
+        return hasInit;
+    }
+
+    public void initId(Optional<Long> maxId){
+        if( hasInit == true ){
+            throw new IdGeneratorException(1,"重复初始化编号生成器",null);
+        }
 
         //设置标记
         if( maxId.isPresent()){

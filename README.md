@@ -10,6 +10,7 @@ Java的ID生成器，功能：
 * 热部署，可以在数据库中动态配置每个key不同的生成方式
 * 同步功能，可以指定key的生成是同步生成，保证无间隙的ID生成
 * try_id功能，数据库只返回下一个可能的编号，而不是保证唯一的编号，这样是为了尽可能最小化ID间距
+* number功能，只提供根据模板生成Counter的编号，不记录编号下一个值，这样可以根据不同时间来生成最新的编号
 * 多租户，支持多租户的ID生成
 * 延迟配置，支持使用时才配置id-generator-config
 
@@ -27,7 +28,7 @@ Java的ID生成器，功能：
     <dependency>
         <groupId>com.github.fishedee</groupId>
         <artifactId>spring-boot-starter-id-generator</artifactId>
-        <version>1.18</version>
+        <version>1.19</version>
     </dependency>
 </dependencies>
 
@@ -42,6 +43,7 @@ Java的ID生成器，功能：
 ```sql
 drop table if exists my_generator_config;
 drop table if exists my_try_generator_config;
+drop table if exists my_number_generator_config;
 
 create table my_generator_config(
     `key` char(32) not null,
@@ -59,14 +61,26 @@ create table my_try_generator_config(
     primary key(`key`)
 )engine=innodb default charset=utf8mb4;
 
+create table my_number_generator_config(
+   `key` char(32) not null,
+   template char(64) not null,
+   primary key("key")
+)engine=innodb default charset=utf8mb4;
+
 insert into my_generator_config(`key`,template,step,initial_value,is_sync) values
-('user.user','{id}',10,1000,0),
-('order.sales_order','XSDD{year}{month}{day}{id:8}',10,'0',0),
-('order.purchase_order','CGDD{year}{month}{day}{id:8}',1,'0',1);
+ ('user.user','{id}',10,1000,0),
+ ('order.sales_order','XSDD{year}{month}{day}{id:8}',10,'0',0),
+ ('order.purchase_order','CGDD{year}{month}{day}{id:8}',1,'0',1);
 
 insert into my_try_generator_config(`key`,template,initial_value)values
 ('try_id','{id}','1'),
 ('try_order_id','XS{year}{id:2+}','');
+
+insert into my_number_generator_config("key",template)values
+('number_id','{id}'),
+('number_order_id','XS{year}{id:2+}'),
+('number_order_id2','XS{year}{month}{id:3+}'),
+('number_order_id3','XS{year}{month}{day}{id:4+}');
 ```
 
 初始化数据库
@@ -76,6 +90,7 @@ spring.id-generator.enable = true
 #默认表名为id_generator_config，可自定义
 #spring.id-generator.table = my_generator_config
 #spring.id-generator.try_table = my_try_generator_config
+#spring.id-generator.number-table=my_number_generator_config
 #spring.id-generator.begin-escape-character = "
 #spring.id-generator.end-escape-character = "
 ```

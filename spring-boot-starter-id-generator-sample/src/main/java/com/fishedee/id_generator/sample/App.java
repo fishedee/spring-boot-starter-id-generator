@@ -35,13 +35,18 @@ public class App implements ApplicationRunner
     @Autowired
     private TryPersistGeneratorTest tryPersistGeneratorTest;
 
+    @Autowired
+    private NumberGeneratorTest numberGeneratorTest;
+
     @Override
     public void run(ApplicationArguments args) throws Exception{
         //persistGeneratorTest.runWithClearCache();
 
         //带事务的启动，测试死锁问题
-        persistGeneratorTest.runWithTransactional();
+        //persistGeneratorTest.runWithTransactional();
 
         //tryPersistGeneratorTest.run();
+
+        numberGeneratorTest.run();
     }
 }

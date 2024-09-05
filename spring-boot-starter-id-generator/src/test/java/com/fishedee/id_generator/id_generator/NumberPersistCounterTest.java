@@ -72,7 +72,7 @@ public class NumberPersistCounterTest {
 
 
     @Test
-    public void testIncrementOneWithTime(){
+    public void testIncrementTimeWithNotMaxId(){
 
         NumberCounter counter = new NumberCounter(getDate(2012,03,04),
                 new NumberPersist("testKey","XS{year}{month}{day}{id:4}"));
@@ -89,135 +89,43 @@ public class NumberPersistCounterTest {
         }
     }
 
-    /*
     @Test
-    public void testTimeAtFirstExpire(){
-        currentTimeStub.setNow(2000,1,2);
-        TryPersistCounter counter = new TryPersistCounter(currentTimeStub,new TryPersist("testKey","XS{year}{month}{day}{id:4}","XS200001020010"));
-        JsonAssertUtil.checkEqualStrict(
-                "{template:\"XS{year}{month}{day}{id:4}\",initialValue:\"XS200001020010\",key:null}",
-                counter.getNextTry()
-        );
+    public void testIncrementTimeWithMaxId(){
 
-        currentTimeStub.setNow(2000,1,3);
+        NumberCounter counter = new NumberCounter(getDate(2012,03,04),
+                new NumberPersist("testKey","XS{year}{month}{day}{id:4}"));
+        counter.initId(Optional.of(100L));
+        assertEquals(
+                "XS201203040101",
+                counter.peek()
+        );
 
         for( int i = 1 ;i <= 20;i++){
-            assertEquals(counter.peek(),String.format("XS2000010300%02d",i));
-            counter.next();
-        }
-        JsonAssertUtil.checkEqualStrict(
-                "{template:\"XS{year}{month}{day}{id:4}\",initialValue:\"XS200001030021\",key:null}",
-                counter.getNextTry()
-        );
-    }
-
-    @Test
-    public void testTimePeekExpire(){
-        currentTimeStub.setNow(2000,1,2);
-        TryPersistCounter counter = new TryPersistCounter(currentTimeStub,new TryPersist("testKey","XS{year}{month}{day}{id:4}","XS200001020010"));
-        JsonAssertUtil.checkEqualStrict(
-                "{template:\"XS{year}{month}{day}{id:4}\",initialValue:\"XS200001020010\",key:null}",
-                counter.getNextTry()
-        );
-
-
-        for( int i = 10 ;i <= 20;i++){
-            assertEquals(counter.peek(),String.format("XS2000010200%02d",i));
-            counter.next();
-        }
-
-        currentTimeStub.setNow(2000,1,3);
-
-        for( int i = 1 ;i <= 20;i++){
-            assertEquals(counter.peek(),String.format("XS2000010300%02d",i));
-            counter.next();
-        }
-        JsonAssertUtil.checkEqualStrict(
-                "{template:\"XS{year}{month}{day}{id:4}\",initialValue:\"XS200001030021\",key:null}",
-                counter.getNextTry()
-        );
-    }
-
-    @Test
-    public void testTimeNextExpire(){
-        currentTimeStub.setNow(2000,1,2);
-        TryPersistCounter counter = new TryPersistCounter(currentTimeStub,new TryPersist("testKey","XS{year}{month}{day}{id:4}","XS200001020010"));
-        JsonAssertUtil.checkEqualStrict(
-                "{template:\"XS{year}{month}{day}{id:4}\",initialValue:\"XS200001020010\",key:null}",
-                counter.getNextTry()
-        );
-
-        for( int i = 10 ;i <= 20;i++){
-            assertEquals(counter.peek(),String.format("XS2000010200%02d",i));
-            counter.next();
-        }
-
-        currentTimeStub.setNow(2000,1,3);
-        counter.next();
-
-        for( int i = 1 ;i <= 20;i++){
-            assertEquals(counter.peek(),String.format("XS2000010300%02d",i));
-            counter.next();
-        }
-        JsonAssertUtil.checkEqualStrict(
-                "{template:\"XS{year}{month}{day}{id:4}\",initialValue:\"XS200001030021\",key:null}",
-                counter.getNextTry()
-        );
-    }
-
-    @Test
-    public void testTimeOnlyYearExpire() {
-        currentTimeStub.setNow(1999,1,2);
-        TryPersistCounter counter = new TryPersistCounter(currentTimeStub,new TryPersist("testKey","XS{year}{id:4}","XS19980011"));
-        JsonAssertUtil.checkEqualStrict(
-                "{template:\"XS{year}{id:4}\",initialValue:\"XS19990001\",key:null}",
-                counter.getNextTry()
-        );
-    }
-
-    @Test
-    public void testTimeOnlyYearAndMonthExpire() {
-        currentTimeStub.setNow(1999,2,2);
-        TryPersistCounter counter = new TryPersistCounter(currentTimeStub,new TryPersist("testKey","XS{year}{month}{id:4}","XS1999010011"));
-        JsonAssertUtil.checkEqualStrict(
-                "{template:\"XS{year}{month}{id:4}\",initialValue:\"XS1999020001\",key:null}",
-                counter.getNextTry()
-        );
-    }
-
-    @Test
-    public void testNotValid(){
-        currentTimeStub.setNow(1999,2,2);
-        TryPersistCounter counter = new TryPersistCounter(currentTimeStub,new TryPersist("testKey","XS{year}{month}{day}{id:4}","XS1999"));
-        JsonAssertUtil.checkEqualStrict(
-                "{template:\"XS{year}{month}{day}{id:4}\",initialValue:\"XS199902020001\",key:null}",
-                counter.getNextTry()
-        );
-
-        for( int i = 1 ;i != 10;i++){
-            assertEquals(counter.peek(),"XS19990202000"+i);
+            assertEquals(counter.peek(),String.format("XS2012030401%02d",i));
+            assertEquals(counter.getMatchIdRegex(),"XS20120304(\\d+)");
             counter.next();
         }
     }
 
     @Test
     public void testLackOfId(){
-        currentTimeStub.setNow(1999,2,2);
+
         IdGeneratorException e = assertThrows(IdGeneratorException.class,()->{
-            TryPersistCounter counter = new TryPersistCounter(currentTimeStub,new TryPersist("testKey","XS{year}{month}{day}","XS19990202"));
+            NumberCounter counter = new NumberCounter(getDate(2012,03,04),
+                    new NumberPersist("testKey","XS{year}{month}{day}"));
         });
         assertTrue(e.getMessage().contains("缺乏id参数"));
     }
 
     @Test
-    public void testInitialValueEmpty(){
-        currentTimeStub.setNow(1999,2,2);
-        TryPersistCounter counter = new TryPersistCounter(currentTimeStub,new TryPersist("testKey","XS{year}{month}{day}{id}",""));
-        for( int i = 1 ;i != 20;i++){
-            assertEquals(counter.peek(),"XS19990202"+i);
-            counter.next();
-        }
-    }
+    public void testInitDuplicate(){
+        NumberCounter counter = new NumberCounter(getDate(2012,03,04),
+                new NumberPersist("testKey","XS{year}{month}{day}{id:4+}"));
 
-     */
+        IdGeneratorException e = assertThrows(IdGeneratorException.class,()->{
+            counter.initId(Optional.empty());
+            counter.initId(Optional.empty());
+        });
+        assertTrue(e.getMessage().contains("重复初始化编号生成器"));
+    }
 }
