@@ -196,4 +196,48 @@ public class PlaceTemplate {
         }
         return builder.toString();
     }
+
+    private String quoteRegexSpecialCharacters(String input){
+        StringBuilder builder = new StringBuilder();
+        for( int i = 0 ;i != input.length();i++){
+            char c = input.charAt(i);
+            if( c == '{' ||
+                c == '}' ||
+                c == '+' ||
+                c == '*' ||
+                c == '[' ||
+                c == ']' ||
+                c == '(' ||
+                c == ')' ){
+                builder.append("\\");
+            }
+            builder.append(c);
+        }
+        return builder.toString();
+    }
+    public String calcMatchIdRegex(Param param){
+        this.init();
+        //只有id参数需要转义为\d+，其他字符都是原样复制
+        StringBuilder builder = new StringBuilder();
+        for( Node node :this.tplNodes){
+            if( node.getType() == Node.NodeType.LITERAL){
+                builder.append(this.quoteRegexSpecialCharacters(node.getLiteralValue()));
+            }else if( node.getType() == Node.NodeType.PLACEHOLDER){
+                Long argument = param.get(node.getPlaceholder());
+                if( argument == null ){
+                    throw new IdGeneratorException(1,"缺少模板参数:"+node.getPlaceholder(),null);
+                }
+                if( node.getPlaceholder().equals("id")){
+                    builder.append("(\\d+)");
+                }else{
+                    Render render = node.getRender();
+                    builder.append(this.quoteRegexSpecialCharacters(render.render(argument)));
+                }
+            }else{
+                //what the fuck is here
+                throw new RuntimeException("未知的nodeType:["+node.getType()+"]");
+            }
+        }
+        return builder.toString();
+    }
 }
